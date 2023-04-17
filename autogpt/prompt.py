@@ -38,6 +38,9 @@ def get_prompt() -> str:
     prompt_generator.add_constraint(
         'Exclusively use the commands listed in double quotes e.g. "command name"'
     )
+    prompt_generator.add_constraint(
+        'You should only use pandas, scikit-learn, and matplotlib package for now.'
+    )
 
     # Define the command list
     commands = [
@@ -59,11 +62,6 @@ def get_prompt() -> str:
         ),
         ("List GPT Agents", "list_agents", {}),
         ("Delete GPT Agent", "delete_agent", {"key": "<key>"}),
-        (
-            "Clone Repository",
-            "clone_repository",
-            {"repository_url": "<url>", "clone_path": "<directory>"},
-        ),
         ("Write to file", "write_to_file", {"file": "<file>", "text": "<text>"}),
         ("Read file", "read_file", {"file": "<file>"}),
         ("Append to file", "append_to_file", {"file": "<file>", "text": "<text>"}),
@@ -81,8 +79,11 @@ def get_prompt() -> str:
             {"code": "<full_code_string>", "focus": "<list_of_focus_areas>"},
         ),
         ("Execute Python File", "execute_python_file", {"file": "<file>"}),
-        ("Generate Image", "generate_image", {"prompt": "<prompt>"}),
-        ("Send Tweet", "send_tweet", {"text": "<text>"}),
+        ("Read Scan Understand Data Source", "read_scan_understand_data_source", {"source": "<source>"}),
+        ("Generate Features", "generate_features", {"source": "<source>"}),
+        ("Visualize Data", "visualize_data", {"source": "<source>"}),
+        ("Build Run and Test Models", "build_run_test_model", {"file": "<file>"}),
+    
     ]
 
     # Only add the audio to text command if the model is specified

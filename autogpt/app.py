@@ -11,6 +11,7 @@ from autogpt.commands.image_gen import generate_image
 from autogpt.commands.audio_text import read_audio_from_file
 from autogpt.commands.web_requests import scrape_links, scrape_text
 from autogpt.commands.execute_code import execute_python_file, execute_shell
+from autogpt.commands.automl_gpt import read_scan_understand_data_source, generate_features, visualize_data
 from autogpt.commands.file_operations import (
     append_to_file,
     delete_file,
@@ -194,6 +195,12 @@ def execute_command(command_name: str, arguments):
             return send_tweet(arguments["text"])
         elif command_name == "do_nothing":
             return "No action performed."
+        elif command_name == "read_scan_understand_data_source":
+            return read_scan_understand_data_source(arguments["source"])
+        elif command_name == "generate_features":
+            return generate_features(arguments["source"])
+        elif command_name == "visualize_data":
+            return visualize_data(arguments["source"])
         elif command_name == "task_complete":
             shutdown()
         else:

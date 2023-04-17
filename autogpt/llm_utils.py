@@ -49,6 +49,71 @@ def call_ai_function(
     return create_chat_completion(model=model, messages=messages, temperature=0)
 
 
+
+def generate_file_based_on_input(
+    function: str, args: List, description: str, model: Optional[str] = None
+) -> str:
+    """Call an AI function
+
+    This is a magic function that can do anything with no-code. See
+    https://github.com/Torantulino/AI-Functions for more info.
+
+    Args:
+        function (str): The function to call
+        args (list): The arguments to pass to the function
+        description (str): The description of the function
+        model (str, optional): The model to use. Defaults to None.
+
+    Returns:
+        str: The response from the function
+    """
+    if model is None:
+        model = CFG.smart_llm_model
+    # For each arg, if any are None, convert to "None":
+    args = [str(arg) if arg is not None else "None" for arg in args]
+    # parse args to comma separated string
+    args = ", ".join(args)
+    messages = [
+        {
+            "role": "system",
+            "content": f"You are now the following python function: ```# {description}"
+            f"\n{function}```\n\nOnly respond with your `return` value.",
+        },
+        {"role": "user", "content": args},
+    ]
+
+    return create_chat_completion(model=model, messages=messages, temperature=0)
+
+def extract_code(input_string):
+    # Initialize a dictionary to store the code blocks for each language
+    code_blocks = {
+        'python': [],
+        'sql': []
+    }
+
+    # Define regular expression patterns for Python and SQL code blocks
+    pattern_python = r"```python(.*?)```"
+    pattern_sql = r"```sql(.*?)```"
+
+    # Extract Python code blocks using the regular expression pattern
+    matches = re.findall(pattern_python, input_string, re.DOTALL)
+    for match in matches:
+        # Remove leading/trailing whitespaces and append the match to the list
+        code_blocks['python'].append(match.strip())
+
+    # Extract SQL code blocks using the regular expression pattern
+    matches = re.findall(pattern_sql, input_string, re.DOTALL)
+    for match in matches:
+        # Remove leading/trailing whitespaces and append the match to the list
+        code_blocks['sql'].append(match.strip())
+
+    # Combine code blocks into single strings using newline as separator
+    code_blocks['python'] = '\n'.join(code_blocks['python'])
+    code_blocks['sql'] = '\n'.join(code_blocks['sql'])
+
+    # Return the dictionary containing the code blocks for both languages
+    return code_blocks
+
 # Overly simple abstraction until we create something better
 # simple retry mechanism when getting a rate error or a bad gateway
 def create_chat_completion(
