@@ -46,10 +46,11 @@ class DatabaseSchema:
         self.tables = []
 
     def add_table(self, tbl: TableSchema):
-        self.tables.append[tbl]
+        self.tables.append(tbl)
 
     def __str__(self):
-        return f"Database(name={self.name}, tables={str(self.tables)})"
+        tables_repr = [str(tbl) for tbl in self.tables]
+        return f"Database(name={self.name}, tables={tables_repr})"
 
 #########################################################
 
@@ -71,38 +72,37 @@ def read_yaml_file(file_path):
     return config
 
 
-def map_datasource_connections_by_type(yaml_config: dict) -> dict[DataSourceType, list]:
+def map_datasource_config_by_type(yaml_config: dict) -> dict[DataSourceType, list]:
     # map data source connections by type
-    ds_conn_map = defaultdict(list)
-    for ds in yaml_config:
-        if 'type' in ds and ds['type'] == DataSourceType.BLOB_STORAGE_URL.name:
+    ds_cfg_map = defaultdict(list)
+    for config in yaml_config["data_sources"]:
+        if 'type' in config and config['type'] == DataSourceType.BLOB_STORAGE_URL.value:
             # Notice here key is the enum var not string value
-            ds_conn_map[DataSourceType.BLOB_STORAGE_URL].append(ds)
+            ds_cfg_map[DataSourceType.BLOB_STORAGE_URL].append(config)
 
-    return ds_conn_map
+    return ds_cfg_map
 
 # read out data sources schema
 
 
-def read_datasources(ds_conn_map: dict[DataSourceType, list]) -> dict[str, DatabaseSchema]:
+def read_datasources(ds_cfg_map: dict[DataSourceType, list]) -> list[DatabaseSchema]:
 
     # Each datasource is parsed into a Database class
     # dict format: {datasource name: Database class}
-    db_schemas = {}
+    db_schemas = []
 
     # handling blob storage url sources
-    for ds in ds_conn_map[DataSourceType.BLOB_STORAGE_URL]:
-        if 'url' not in ds:
-            print(f"URL not specified for blob url datasource {str(ds)}, skipped...")
+    for cfg in ds_cfg_map[DataSourceType.BLOB_STORAGE_URL]:
+        if 'url' not in cfg:
+            print(f"URL not specified for blob url datasource {str(cfg)}, skipped...")
             continue
-        url = ds['url']
+        url = cfg['url']
 
         # if it's parquet file
         if url.endswith('.parquet'):
-            src_name = ds['name']
-            db_schemas[src_name] = read_parquet_schema(src_name, url)
+            db_schemas.append(read_parquet_schema(cfg['name'], url))
         else:
-            print(f"Unsupported blob url datasource file type {str(ds)}, skipped...")
+            print(f"Unsupported blob url datasource file type {str(cfg)}, skipped...")
 
     return db_schemas
 
@@ -133,10 +133,10 @@ def get_datasource_schema() -> str:
     """
     config = read_yaml_file(get_datasource_yaml_path())
 
-    ds_conn_map = map_datasource_connections_by_type(config)
+    ds_cfg_map = map_datasource_config_by_type(config)
 
     # read the datasource connections and return schemas
-    db_schemas = read_datasources(ds_conn_map)
+    db_schemas = read_datasources(ds_cfg_map)
 
     schema_str = "Datasources:\n"
 
