@@ -20,15 +20,15 @@ def read_scan_understand_data_source(source: str) -> List[str]:
     function_string = "def read_scan_understand_data_source(code: str) -> List[str]:"
     args = [source]
     description_string = (
-        "You have a data source like this. generate whole python code to scan and analyze the data, including name, shape, dtypes, sample, distribution, missing values, unique values, and other info that may help on the data analytics of the dataset. save the analyzed result in a file called /tmp/analyze.txt and return the content of /tmp/analyze.txt"
+       f"You have a data source like this. generate whole python code to scan and analyze the data, including name, shape, dtypes, sample, distribution, missing values, unique values, and other info that may help on the data analytics of the dataset. save the analyzed result in a file called /Users/james/Documents/GitHub/AutoMLGPT/auto_gpt_workspace/read_scan_understand_data_source_generated.py/analyze.txt and return the content of /Users/james/Documents/GitHub/AutoMLGPT/auto_gpt_workspace/read_scan_understand_data_source_generated.py/analyze.txt. The location of the file is {source}"
     )
 
     res = call_ai_function(function_string, args, description_string)
-    print("res", call_ai_function(function_string, args, description_string))
-    code = extract_code(res)
+    # print("res", call_ai_function(function_string, args, description_string))
+    code = extract_code(res)['python']
     print("extract code",code)
-    write_to_file("/tmp/read_scan_understand_data_source_generated.py", code)
-    execute_python_file("/tmp/read_scan_understand_data_source_generated.py")
+    write_to_file("/Users/james/Documents/GitHub/AutoMLGPT/auto_gpt_workspace/read_scan_understand_data_source_generated.py", code)
+    execute_python_file("/Users/james/Documents/GitHub/AutoMLGPT/auto_gpt_workspace/read_scan_understand_data_source_generated.py")
     return "success"
 
 

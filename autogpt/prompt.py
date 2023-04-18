@@ -79,7 +79,7 @@ def get_prompt() -> str:
             {"code": "<full_code_string>", "focus": "<list_of_focus_areas>"},
         ),
         ("Execute Python File", "execute_python_file", {"file": "<file>"}),
-        ("Read Scan Understand Data Source", "read_scan_understand_data_source", {"source": "<source>"}),
+        # ("Read Scan Understand Data Source", "read_scan_understand_data_source", {"source": "<source>"}),
         ("Generate Features", "generate_features", {"source": "<source>"}),
         ("Visualize Data", "visualize_data", {"source": "<source>"}),
         ("Build Run and Test Models", "build_run_test_model", {"file": "<file>"}),

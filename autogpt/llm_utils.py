@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from ast import List
 import time
-
+import re
 import openai
 from openai.error import APIError, RateLimitError
 from colorama import Fore
@@ -85,6 +85,7 @@ def generate_file_based_on_input(
     return create_chat_completion(model=model, messages=messages, temperature=0)
 
 def extract_code(input_string):
+    # import re
     # Initialize a dictionary to store the code blocks for each language
     code_blocks = {
         'python': [],
