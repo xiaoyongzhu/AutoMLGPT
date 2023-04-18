@@ -83,6 +83,7 @@ def get_prompt() -> str:
         ("Generate Features", "generate_features", {"source": "<source>"}),
         ("Visualize Data", "visualize_data", {"source": "<source>"}),
         ("Build Run and Test Models", "build_run_test_model", {"file": "<file>"}),
+        ("Get table schema of available data sources", "get_datasource_schema", {}),
     
     ]
 

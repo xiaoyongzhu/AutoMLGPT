@@ -1,0 +1,21 @@
+# List the datasources in this file so LLM can access them
+#
+# Supported source types:
+# 
+# 1. blob store with public url
+# 
+# - name: <your data source name>
+#   type: blob_storage_url
+#   url: <url link to the data>
+
+data_sources:
+  - name: yellow_taxi_data
+    type: blob_storage_url
+    url: "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2023-01.parquet"
+  # - name: snowflake_src_1
+  #   type: snowflake
+  #   account: "myaccount.snowflakecomputing.com"
+  #   user: "myuser"
+  #   password: "mypassword"
+  #   database: "mydatabase"
+  #   warehouse: "mywarehouse"
