@@ -26,6 +26,7 @@ from autogpt.speech import say_text
 from autogpt.commands.web_selenium import browse_website
 from autogpt.commands.git_operations import clone_repository
 from autogpt.commands.twitter import send_tweet
+from autogpt.commands.get_datasource_schema import get_datasource_schema
 
 
 CFG = Config()
@@ -201,6 +202,8 @@ def execute_command(command_name: str, arguments):
             return generate_features(arguments["source"])
         elif command_name == "visualize_data":
             return visualize_data(arguments["source"])
+        elif command_name == "get_datasource_schema":
+            return get_datasource_schema()
         elif command_name == "task_complete":
             shutdown()
         else:
