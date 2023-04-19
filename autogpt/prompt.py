@@ -80,11 +80,14 @@ def get_prompt() -> str:
         ),
         ("Execute Python File", "execute_python_file", {"file": "<file>"}),
         # ("Read Scan Understand Data Source", "read_scan_understand_data_source", {"source": "<source>"}),
-        ("Generate Features", "generate_features", {"source": "<source>"}),
+        # ("Generate Features", "generate_features", {"source": "<source>"}),
         ("Visualize Data", "visualize_data", {"source": "<source>"}),
         ("Build Run and Test Models", "build_run_test_model", {"file": "<file>"}),
         ("Get table schema of available data sources", "get_datasource_schema", {}),
-    
+        ("Generate code to produce ML features based on the given schema",
+         "generate_features_from_schema",
+         {"input_dataframe_name": "<input_dataframe_name>", "schema": "<schema_of_dataframe>", "target": "<target_of_machine_learning_task>"})
+
     ]
 
     # Only add the audio to text command if the model is specified

@@ -27,6 +27,7 @@ from autogpt.commands.web_selenium import browse_website
 from autogpt.commands.git_operations import clone_repository
 from autogpt.commands.twitter import send_tweet
 from autogpt.commands.get_datasource_schema import get_datasource_schema
+from autogpt.commands.generate_features_from_schema import generate_features_from_schema
 
 
 CFG = Config()
@@ -131,7 +132,8 @@ def execute_command(command_name: str, arguments):
 
             # google_result can be a list or a string depending on the search results
             if isinstance(google_result, list):
-                safe_message = [google_result_single.encode('utf-8', 'ignore') for google_result_single in google_result]
+                safe_message = [google_result_single.encode(
+                    'utf-8', 'ignore') for google_result_single in google_result]
             else:
                 safe_message = google_result.encode('utf-8', 'ignore')
 
@@ -204,6 +206,10 @@ def execute_command(command_name: str, arguments):
             return visualize_data(arguments["source"])
         elif command_name == "get_datasource_schema":
             return get_datasource_schema()
+        elif command_name == "generate_features_from_schema":
+            return generate_features_from_schema(arguments["input_dataframe_name"],
+                                                 arguments["schema"],
+                                                 arguments["target"])
         elif command_name == "task_complete":
             shutdown()
         else:
