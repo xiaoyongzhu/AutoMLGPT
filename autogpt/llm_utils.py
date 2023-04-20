@@ -84,6 +84,61 @@ def generate_file_based_on_input(
 
     return create_chat_completion(model=model, messages=messages, temperature=0)
 
+
+def generate_code_based_on_description(
+    function: str, args: List, description: str, model: Optional[str] = None
+) -> str:
+    """Call an AI function
+
+    This is a magic function that can do anything with no-code. See
+    https://github.com/Torantulino/AI-Functions for more info.
+
+    Args:
+        function (str): The function to call
+        args (list): The arguments to pass to the function
+        description (str): The description of the function
+        model (str, optional): The model to use. Defaults to None.
+
+    Returns:
+        str: The response from the function
+    """
+    if model is None:
+        model = CFG.smart_llm_model
+    # For each arg, if any are None, convert to "None":
+    # parse args to comma separated string
+    system_prompt = """
+    You are a helpful code assistant.
+
+    """
+    misc_requirements = """
+        - return the python code in a single python block, assuming the pandas dataframes are already given
+    
+    - Don't use the original columns. Always use some sort of combination of the columns, or transformation/aggregation of the columns. Use pandas to do all the work
+    - Make sure the original columns exist when you generate all the features.
+    - If using divisions, make sure there's no zeros in the Divisor
+    - If asked to generate a distribution graph, the x axis max should be the 99.5% percentile of the data and the min should be 0.5% percentile of the data in case of outliers
+       
+    """
+    user_input = f"Write a python function, the function name should be called {function}, the input would be {args}, and the description is {description}"
+    messages = [
+        {
+            "role": "system",
+            "content": system_prompt,
+        },
+        {"role": "user", "content": user_input + misc_requirements},
+    ]
+
+    response = create_chat_completion(model=model, messages=messages, temperature=0)
+    with open("response.txt", 'w') as file:
+        file.write(response)
+    generated_code = extract_code(
+        response)["python"] or extract_code(response)["sql"]
+    file_name = f"/Users/james/Documents/GitHub/AutoMLGPT/auto_gpt_workspace/generated_code.py"
+    with open(file_name, 'w') as file:
+        file.write(generated_code)
+    return generated_code if generated_code else  "no code is generated, something is wrong."
+
+
 def extract_code(input_string):
     # import re
     # Initialize a dictionary to store the code blocks for each language

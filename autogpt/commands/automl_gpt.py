@@ -1,7 +1,7 @@
 """Code evaluation module."""
 from typing import List
 
-from autogpt.llm_utils import call_ai_function, extract_code
+from autogpt.llm_utils import call_ai_function, generate_code_based_on_description
 from autogpt.commands.file_operations import write_to_file
 from autogpt.commands.execute_code import execute_python_file
 
@@ -17,19 +17,17 @@ def read_scan_understand_data_source(source: str) -> List[str]:
             improve the code.
     """
 
-    function_string = "def read_scan_understand_data_source(code: str) -> List[str]:"
+    function_name = "read_scan_understand_data_source"
     args = [source]
     description_string = (
-       f"You have a data source like this. generate whole python code to scan and analyze the data, including name, shape, dtypes, sample, distribution, missing values, unique values, and other info that may help on the data analytics of the dataset. save the analyzed result in a file called /Users/james/Documents/GitHub/AutoMLGPT/auto_gpt_workspace/read_scan_understand_data_source_generated.py/analyze.txt and return the content of /Users/james/Documents/GitHub/AutoMLGPT/auto_gpt_workspace/read_scan_understand_data_source_generated.py/analyze.txt. The location of the file is {source}"
+       f"You have data source which is {source}. generate whole python code to scan and analyze the data, including name, shape, dtypes, sample, distribution, missing values, unique values, and other info that may help on the data analytics of the dataset. save the analyzed result in a file called /Users/james/Documents/GitHub/AutoMLGPT/auto_gpt_workspace/analyze.txt and return its content."
     )
 
-    res = call_ai_function(function_string, args, description_string)
-    # print("res", call_ai_function(function_string, args, description_string))
-    code = extract_code(res)['python']
-    print("extract code",code)
-    write_to_file("/Users/james/Documents/GitHub/AutoMLGPT/auto_gpt_workspace/read_scan_understand_data_source_generated.py", code)
-    execute_python_file("/Users/james/Documents/GitHub/AutoMLGPT/auto_gpt_workspace/read_scan_understand_data_source_generated.py")
-    return "success"
+    res = generate_code_based_on_description(function_name, args, description_string)
+    filename = "/Users/james/Documents/GitHub/AutoMLGPT/auto_gpt_workspace/generated_code.py"  
+  
+    with open(filename, "r") as file:  
+        return exec(file.read())  
 
 
 
