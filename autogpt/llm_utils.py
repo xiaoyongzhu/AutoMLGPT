@@ -3,11 +3,12 @@ from __future__ import annotations
 import time
 import re
 from ast import List
-
+import os
 import openai
 from colorama import Fore, Style
 from openai.error import APIError, RateLimitError
-
+from autogpt.workspace import path_in_workspace
+import time
 from autogpt.config import Config
 from autogpt.logs import logger
 
@@ -87,7 +88,7 @@ def generate_file_based_on_input(
     return create_chat_completion(model=model, messages=messages, temperature=0)
 
 
-def generate_code_based_on_description(
+def generate_single_function_based_on_description(
     function: str, args: List, description: str, model: Optional[str] = None
 ) -> str:
     """Call an AI function
@@ -112,14 +113,12 @@ def generate_code_based_on_description(
     You are a helpful code assistant.
 
     """
-    misc_requirements = """
-        - return the python code in a single python block, assuming the pandas dataframes are already given
-    
-    - Don't use the original columns. Always use some sort of combination of the columns, or transformation/aggregation of the columns. Use pandas to do all the work
-    - Make sure the original columns exist when you generate all the features.
-    - If using divisions, make sure there's no zeros in the Divisor
+    misc_requirements = """    
+    - if asked to do feature engineering, Don't just use the original columns. Always use some sort of combination of the columns, or transformation/aggregation of the columns. Use pandas to do all the work
+    - if asked to do feature engineering,  Make sure the original columns exist when you generate all the features.
+    - if asked to do feature engineering,  If using divisions, make sure there's no zeros in the Divisor
     - If asked to generate a distribution graph, the x axis max should be the 99.5% percentile of the data and the min should be 0.5% percentile of the data in case of outliers
-       
+    - make sure import all the packages that are needed such as numpy
     """
     user_input = f"Write a python function, the function name should be called {function}, the input would be {args}, and the description is {description}"
     messages = [
@@ -131,14 +130,24 @@ def generate_code_based_on_description(
     ]
 
     response = create_chat_completion(model=model, messages=messages, temperature=0)
-    with open("response.txt", 'w') as file:
+    # Get the current time and seconds
+    current_time = time.localtime()
+    current_time_str = time.strftime("%Y%m%d_%H%M%S", current_time)
+    with open(path_in_workspace(f"result_{current_time_str}.txt"), 'w') as file:
         file.write(response)
-    generated_code = extract_code(
-        response)["python"] or extract_code(response)["sql"]
-    file_name = f"/Users/james/Documents/GitHub/AutoMLGPT/auto_gpt_workspace/generated_code.py"
+
+    # if the function is returned without being put into a code block
+    if response.startswith(f"def {function}"):
+        generated_code = response
+    else:
+        generated_code = extract_code(
+            response)["python"] or extract_code(response)["sql"]
+    # Create the filename with the current time and seconds
+
+    file_name = path_in_workspace(f"generated_{function}_{current_time_str}.py")
     with open(file_name, 'w') as file:
         file.write(generated_code)
-    return generated_code if generated_code else  "no code is generated, something is wrong."
+    return file_name if generated_code else  ""
 
 
 def extract_code(input_string):

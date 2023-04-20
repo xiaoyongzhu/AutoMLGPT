@@ -233,8 +233,8 @@ def execute_command(command_name: str, arguments):
         elif command_name == "get_datasource_schema":
             return get_datasource_schema()
         elif command_name == "generate_features_from_schema":
-            return generate_features_from_schema(arguments["input_dataframe_name"],
-                                                 arguments["schema"],
+            return generate_features_from_schema(arguments["input_source"],
+                                                #  arguments["schema"],
                                                  arguments["target"])
         elif command_name == "task_complete":
             shutdown()

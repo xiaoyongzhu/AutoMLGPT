@@ -87,7 +87,7 @@ def get_prompt() -> str:
         # ("Read Scan Understand Data Source and Get table schema of available data sources", "get_datasource_schema", {}),
         ("Generate code to produce ML features based on the given schema",
          "generate_features_from_schema",
-         {"input_dataframe_name": "<input_dataframe_name>", "schema": "<schema_of_dataframe>", "target": "<target_of_machine_learning_task>"})
+         {"input_source": "<input_source>", "target": "<target_of_machine_learning_task>"})
 
     ]
 
