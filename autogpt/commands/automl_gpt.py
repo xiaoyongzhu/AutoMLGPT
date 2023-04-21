@@ -33,6 +33,34 @@ def read_scan_understand_data_source(source: str) -> List[str]:
 
 
 
+def generate_models(input_source: str, target: str) -> str:
+    """
+    A function that takes in data schema, and return code that generates features.
+
+    Parameters:
+        schema: data schema in the format of string
+    Returns:
+        string of python code that produces features in pandas dataframe.
+    """
+
+    function_name = "generate_models"
+    args = [input_source, target]
+    description_string = (
+       f"""
+       You have data source which is {input_source}. 
+        "Given the variable name of the input dataframe, the schema of the dataframe and an ML target,"
+        " generate python code that produce ML features and machine learning code  to predict {target} that maximize the accuracy"
+        Return the result in a single python code block
+        """
+    )
+
+    code_path = generate_single_function_based_on_description(function_name, args, description_string)
+    if code_path:
+        # Run the other script
+        return subprocess.run(["python", code_path], capture_output=True, text=True)
+    else:
+        raise RuntimeError("something is wrong, code is not generated, need human input")
+
 
 """Code evaluation module."""
 from typing import List

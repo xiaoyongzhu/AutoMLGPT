@@ -7,7 +7,7 @@ from autogpt.commands.analyze_code import analyze_code
 from autogpt.commands.audio_text import read_audio_from_file
 from autogpt.commands.web_requests import scrape_links, scrape_text
 from autogpt.commands.execute_code import execute_python_file, execute_shell
-from autogpt.commands.automl_gpt import read_scan_understand_data_source, generate_features, visualize_data
+from autogpt.commands.automl_gpt import read_scan_understand_data_source, generate_features, visualize_data, generate_models
 from autogpt.commands.execute_code import (
     execute_python_file,
     execute_shell,
@@ -234,6 +234,10 @@ def execute_command(command_name: str, arguments):
             return get_datasource_schema()
         elif command_name == "generate_features_from_schema":
             return generate_features_from_schema(arguments["input_source"],
+                                                #  arguments["schema"],
+                                                 arguments["target"])
+        elif command_name == "generate_models":
+            return generate_models(arguments["input_source"],
                                                 #  arguments["schema"],
                                                  arguments["target"])
         elif command_name == "task_complete":
