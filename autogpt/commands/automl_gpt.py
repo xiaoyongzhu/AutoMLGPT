@@ -1,5 +1,5 @@
 """Code evaluation module."""
-from typing import List
+from typing import List, Optional, Tuple
 import subprocess
 from autogpt.workspace import path_in_workspace
 from autogpt.llm_utils import call_ai_function, generate_single_function_based_on_description
@@ -33,7 +33,7 @@ def read_scan_understand_data_source(source: str) -> List[str]:
 
 
 
-def generate_models(input_source: str, target: str) -> str:
+def generate_models(input_source: str, target: str, suggestion: Optional[str]) -> str:
     """
     A function that takes in data schema, and return code that generates features.
 
@@ -44,15 +44,17 @@ def generate_models(input_source: str, target: str) -> str:
     """
 
     function_name = "generate_models"
-    args = [input_source, target]
+    args = [input_source, target, suggestion]
     description_string = (
        f"""
        You have data source which is {input_source}. 
         "Given the variable name of the input dataframe, the schema of the dataframe and an ML target,"
-        " generate python code that produce ML features and machine learning code  to predict {target} that maximize the accuracy"
-        Return the result in a single python code block
+        " generate python code that produce ML features and machine learning code  to predict {target} that maximize the accuracy."
+        Return the result in a single python code block.
         """
     )
+
+    description_string += f"Use these suggestions if applicable when generating code: {suggestion}" if suggestion else ""
 
     code_path = generate_single_function_based_on_description(function_name, args, description_string)
     if code_path:
@@ -115,3 +117,30 @@ def visualize_data(source: str) -> List[str]:
     )
 
     return call_ai_function(function_string, args, description_string)
+
+
+
+def improve_code_file(file_path: str, error_message: str) -> Tuple[str, str]:
+
+    with open(file_path, 'r+') as file:
+        # read from file
+        code = file.read()
+
+        function_string = (
+            "def generate_improved_code(code: str, error_message: str) -> str:"
+        )
+        
+        # use magic func to improve code.
+        args = [code, error_message]
+        description_string = (
+            "Fix the provided code based on the error messages"
+            " provided, making no other changes."
+        )
+
+        improved_code = call_ai_function(function_string, args, description_string)
+
+        # write back to file
+        file.seek(0)
+        file.write(improved_code)
+
+    return (file_path, improved_code)

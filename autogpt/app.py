@@ -7,7 +7,7 @@ from autogpt.commands.analyze_code import analyze_code
 from autogpt.commands.audio_text import read_audio_from_file
 from autogpt.commands.web_requests import scrape_links, scrape_text
 from autogpt.commands.execute_code import execute_python_file, execute_shell
-from autogpt.commands.automl_gpt import read_scan_understand_data_source, generate_features, visualize_data, generate_models
+from autogpt.commands.automl_gpt import *
 from autogpt.commands.execute_code import (
     execute_python_file,
     execute_shell,
@@ -191,7 +191,7 @@ def execute_command(command_name: str, arguments):
         # non-file is given, return instructions "Input should be a python
         # filepath, write your code to file and try again"
         elif command_name == "analyze_code":
-            return analyze_code(arguments["code"])
+            return analyze_code(arguments["code"], arguments["error_message"])
         elif command_name == "improve_code":
             return improve_code(arguments["suggestions"], arguments["code"])
         elif command_name == "write_tests":
@@ -237,9 +237,17 @@ def execute_command(command_name: str, arguments):
                                                 #  arguments["schema"],
                                                  arguments["target"])
         elif command_name == "generate_models":
-            return generate_models(arguments["input_source"],
+            if "suggestion" in arguments:
+                return generate_models(arguments["input_source"],
+                                                #  arguments["schema"],
+                                                 arguments["target"],
+                                                 arguments["suggestion"])
+            else:
+                return generate_models(arguments["input_source"],
                                                 #  arguments["schema"],
                                                  arguments["target"])
+        elif command_name == "improve_code_file":
+            return improve_code_file(arguments["file"], arguments["error_message"])
         elif command_name == "task_complete":
             shutdown()
         else:

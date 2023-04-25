@@ -67,29 +67,40 @@ def get_prompt() -> str:
         # ("Read file", "read_file", {"file": "<file>"}),
         ("Append to file", "append_to_file", {"file": "<file>", "text": "<text>"}),
         ("Delete file", "delete_file", {"file": "<file>"}),
-        ("Search Files", "search_files", {"directory": "<directory>"}),
-        ("Analyze Code", "analyze_code", {"code": "<full_code_string>"}),
-        (
-            "Get Improved Code",
-            "improve_code",
-            {"suggestions": "<list_of_suggestions>", "code": "<full_code_string>"},
-        ),
+        # ("Search Files", "search_files", {"directory": "<directory>"}),
+        # ("Analyze Code, based on error message from previous run if any", "analyze_code", {"code": "<full_code_string>", "error_message": "<error_message_string>"}),
+        # (
+        #     "Get Improved Code",
+        #     "improve_code",
+        #     {"suggestions": "<list_of_suggestions>", "code": "<full_code_string>"},
+        # ),
         (
             "Write Tests",
             "write_tests",
             {"code": "<full_code_string>", "focus": "<list_of_focus_areas>"},
         ),
         ("Execute Python File", "execute_python_file", {"file": "<file>"}),
-        ("Read Scan Understand Data Source", "read_scan_understand_data_source", {"source": "<source>"}),
+        # ("Read Scan Understand Data Source", "read_scan_understand_data_source", {"source": "<source>"}),
         # ("Generate Features", "generate_features", {"source": "<source>"}),
         # ("Visualize Data", "visualize_data", {"source": "<source>"}),
         # ("Build Run and Test Models", "build_run_test_model", {"file": "<file>"}),
-        # ("Read Scan Understand Data Source and Get table schema of available data sources", "get_datasource_schema", {}),
-        ("Generate code to produce ML features based on the given schema",
-         "generate_features_from_schema",
-         {"input_source": "<input_source>", "target": "<target_of_machine_learning_task>"}),
-         
-        ("Generate features and models", "generate_models",{"input_source": "<input_source>", "target": "<target_of_machine_learning_task>"}),
+        ("Get table schema of available data sources", "get_datasource_schema", {}),
+        # ("Generate code to produce ML features based on the given schema",
+        #  "generate_features_from_schema",
+        #  {"input_source": "<input_source>", "target": "<target_of_machine_learning_task>"}),
+        (
+            "Generate features and models",
+            "generate_models",
+            {"input_source": "<input_source>",
+             "target": "<target_of_machine_learning_task>",
+             "suggestion": "<optional_suggestion_for_building_model>"
+            }
+        ),
+        (
+         "Improve and fix the python code file, based on error message from previous run",
+         "improve_code_file",
+         {"file": "path_to_file", "error_message": "error_message"}
+        ),
 
     ]
 
