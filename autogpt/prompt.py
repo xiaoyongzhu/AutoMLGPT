@@ -31,11 +31,11 @@ def get_prompt() -> str:
         "~4000 word limit for short term memory. Your short term memory is short, so"
         " immediately save important information to files."
     )
-    prompt_generator.add_constraint(
-        "If you are unsure how you previously did something or want to recall past"
-        " events, thinking about similar events will help you remember."
-    )
-    prompt_generator.add_constraint("No user assistance")
+    # prompt_generator.add_constraint(
+    #     "If you are unsure how you previously did something or want to recall past"
+    #     " events, thinking about similar events will help you remember."
+    # )
+    # prompt_generator.add_constraint("No user assistance")
     prompt_generator.add_constraint(
         'Exclusively use the commands listed in double quotes e.g. "command name"'
     )
@@ -46,27 +46,29 @@ def get_prompt() -> str:
     # Define the command list
     commands = [
         ("Google Search", "google", {"input": "<search>"}),
-        (
-            "Browse Website",
-            "browse_website",
-            {"url": "<url>", "question": "<what_you_want_to_find_on_website>"},
-        ),
-        (
-            "Start GPT Agent",
-            "start_agent",
-            {"name": "<name>", "task": "<short_task_desc>", "prompt": "<prompt>"},
-        ),
-        (
-            "Message GPT Agent",
-            "message_agent",
-            {"key": "<key>", "message": "<message>"},
-        ),
-        ("List GPT Agents", "list_agents", {}),
-        ("Delete GPT Agent", "delete_agent", {"key": "<key>"}),
-        ("Write to file", "write_to_file", {"file": "<file>", "text": "<text>"}),
+        ("Send response to human", "respond_to_human", {"response": "<reponse_from_ai>"}),
+        ("Based on the provided context, deduce the answer to the given question", "deduce", {"context": "<current_context>", "question": "<question_to_answer>"}),
+        # (
+        #     "Browse Website",
+        #     "browse_website",
+        #     {"url": "<url>", "question": "<what_you_want_to_find_on_website>"},
+        # ),
+        # (
+        #     "Start GPT Agent",
+        #     "start_agent",
+        #     {"name": "<name>", "task": "<short_task_desc>", "prompt": "<prompt>"},
+        # ),
+        # (
+        #     "Message GPT Agent",
+        #     "message_agent",
+        #     {"key": "<key>", "message": "<message>"},
+        # ),
+        # ("List GPT Agents", "list_agents", {}),
+        # ("Delete GPT Agent", "delete_agent", {"key": "<key>"}),
+        # ("Write to file", "write_to_file", {"file": "<file>", "text": "<text>"}),
         # ("Read file", "read_file", {"file": "<file>"}),
-        ("Append to file", "append_to_file", {"file": "<file>", "text": "<text>"}),
-        ("Delete file", "delete_file", {"file": "<file>"}),
+        # ("Append to file", "append_to_file", {"file": "<file>", "text": "<text>"}),
+        # ("Delete file", "delete_file", {"file": "<file>"}),
         # ("Search Files", "search_files", {"directory": "<directory>"}),
         # ("Analyze Code, based on error message from previous run if any", "analyze_code", {"code": "<full_code_string>", "error_message": "<error_message_string>"}),
         # (
@@ -74,68 +76,68 @@ def get_prompt() -> str:
         #     "improve_code",
         #     {"suggestions": "<list_of_suggestions>", "code": "<full_code_string>"},
         # ),
-        (
-            "Write Tests",
-            "write_tests",
-            {"code": "<full_code_string>", "focus": "<list_of_focus_areas>"},
-        ),
-        ("Execute Python File", "execute_python_file", {"file": "<file>"}),
+        # (
+        #     "Write Tests",
+        #     "write_tests",
+        #     {"code": "<full_code_string>", "focus": "<list_of_focus_areas>"},
+        # ),
+        # ("Execute Python File", "execute_python_file", {"file": "<file>"}),
         # ("Read Scan Understand Data Source", "read_scan_understand_data_source", {"source": "<source>"}),
         # ("Generate Features", "generate_features", {"source": "<source>"}),
         # ("Visualize Data", "visualize_data", {"source": "<source>"}),
         # ("Build Run and Test Models", "build_run_test_model", {"file": "<file>"}),
-        ("Get table schema of available data sources", "get_datasource_schema", {}),
+        # ("Get table schema of available data sources", "get_datasource_schema", {}),
         # ("Generate code to produce ML features based on the given schema",
         #  "generate_features_from_schema",
         #  {"input_source": "<input_source>", "target": "<target_of_machine_learning_task>"}),
-        (
-            "Generate features and models",
-            "generate_models",
-            {"input_source": "<input_source>",
-             "target": "<target_of_machine_learning_task>",
-             "suggestion": "<optional_suggestion_for_building_model>"
-            }
-        ),
-        (
-         "Improve and fix the python code file, based on error message from previous run",
-         "improve_code_file",
-         {"file": "path_to_file", "error_message": "error_message"}
-        ),
+        # (
+        #     "Generate features and models",
+        #     "generate_models",
+        #     {"input_source": "<input_source>",
+        #      "target": "<target_of_machine_learning_task>",
+        #      "suggestion": "<optional_suggestion_for_building_model>"
+        #     }
+        # ),
+        # (
+        #  "Improve and fix the python code file, based on error message from previous run",
+        #  "improve_code_file",
+        #  {"file": "path_to_file", "error_message": "error_message"}
+        # ),
 
     ]
 
-    # Only add the audio to text command if the model is specified
-    if cfg.huggingface_audio_to_text_model:
-        commands.append(
-            ("Convert Audio to text", "read_audio_from_file", {"file": "<file>"}),
-        )
+    # # Only add the audio to text command if the model is specified
+    # if cfg.huggingface_audio_to_text_model:
+    #     commands.append(
+    #         ("Convert Audio to text", "read_audio_from_file", {"file": "<file>"}),
+    #     )
 
-    # Only add shell command to the prompt if the AI is allowed to execute it
-    if cfg.execute_local_commands:
-        commands.append(
-            (
-                "Execute Shell Command, non-interactive commands only",
-                "execute_shell",
-                {"command_line": "<command_line>"},
-            ),
-        )
-        commands.append(
-            (
-                "Execute Shell Command Popen, non-interactive commands only",
-                "execute_shell_popen",
-                {"command_line": "<command_line>"},
-            ),
-        )
+    # # Only add shell command to the prompt if the AI is allowed to execute it
+    # if cfg.execute_local_commands:
+    #     commands.append(
+    #         (
+    #             "Execute Shell Command, non-interactive commands only",
+    #             "execute_shell",
+    #             {"command_line": "<command_line>"},
+    #         ),
+    #     )
+    #     commands.append(
+    #         (
+    #             "Execute Shell Command Popen, non-interactive commands only",
+    #             "execute_shell_popen",
+    #             {"command_line": "<command_line>"},
+    #         ),
+    #     )
 
-    # Only add the download file command if the AI is allowed to execute it
-    if cfg.allow_downloads:
-        commands.append(
-            (
-                "Downloads a file from the internet, and stores it locally",
-                "download_file",
-                {"url": "<file_url>", "file": "<saved_filename>"},
-            ),
-        )
+    # # Only add the download file command if the AI is allowed to execute it
+    # if cfg.allow_downloads:
+    #     commands.append(
+    #         (
+    #             "Downloads a file from the internet, and stores it locally",
+    #             "download_file",
+    #             {"url": "<file_url>", "file": "<saved_filename>"},
+    #         ),
+    #     )
 
     # Add these command last.
     commands.append(
@@ -179,40 +181,65 @@ def get_prompt() -> str:
     return prompt_generator.generate_prompt_string()
 
 
-def construct_prompt() -> str:
+
+
+def construct_chatbot_prompt() -> str:
     """Construct the prompt for the AI to respond to
 
     Returns:
         str: The prompt string
     """
-    config = AIConfig.load(CFG.ai_settings_file)
-    if CFG.skip_reprompt and config.ai_name:
-        logger.typewriter_log("Name :", Fore.GREEN, config.ai_name)
-        logger.typewriter_log("Role :", Fore.GREEN, config.ai_role)
-        logger.typewriter_log("Goals:", Fore.GREEN, f"{config.ai_goals}")
-    elif config.ai_name:
-        logger.typewriter_log(
-            "Welcome back! ",
-            Fore.GREEN,
-            f"Would you like me to return to being {config.ai_name}?",
-            speak_text=True,
-        )
-        should_continue = clean_input(
-            f"""Continue with the last settings?
+    config = AIConfig(ai_name="Chatbot",
+                      ai_role="An AI that converse with humans and answer questions.",
+                      ai_goals=["Continue converse with humans and answer questions."])
+
+    print(f"""Here is the setup of the Chatbot
 Name:  {config.ai_name}
 Role:  {config.ai_role}
 Goals: {config.ai_goals}
-Continue (y/n): """
-        )
-        if should_continue.lower() == "n":
-            config = AIConfig()
-
-    if not config.ai_name:
-        config = prompt_user()
-        config.save(CFG.ai_settings_file)
+""")
 
     # Get rid of this global:
     global ai_name
     ai_name = config.ai_name
 
     return config.construct_full_prompt()
+
+
+# def construct_prompt() -> str:
+#     """Construct the prompt for the AI to respond to
+
+#     Returns:
+#         str: The prompt string
+#     """
+#     config = AIConfig.load(CFG.ai_settings_file)
+#     if CFG.skip_reprompt and config.ai_name:
+#         logger.typewriter_log("Name :", Fore.GREEN, config.ai_name)
+#         logger.typewriter_log("Role :", Fore.GREEN, config.ai_role)
+#         logger.typewriter_log("Goals:", Fore.GREEN, f"{config.ai_goals}")
+#     elif config.ai_name:
+#         logger.typewriter_log(
+#             "Welcome back! ",
+#             Fore.GREEN,
+#             f"Would you like me to return to being {config.ai_name}?",
+#             speak_text=True,
+#         )
+#         should_continue = clean_input(
+#             f"""Continue with the last settings?
+# Name:  {config.ai_name}
+# Role:  {config.ai_role}
+# Goals: {config.ai_goals}
+# Continue (y/n): """
+#         )
+#         if should_continue.lower() == "n":
+#             config = AIConfig()
+
+#     if not config.ai_name:
+#         config = prompt_user()
+#         config.save(CFG.ai_settings_file)
+
+#     # Get rid of this global:
+#     global ai_name
+#     ai_name = config.ai_name
+
+#     return config.construct_full_prompt()

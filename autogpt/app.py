@@ -150,6 +150,12 @@ def execute_command(command_name: str, arguments):
                 safe_message = google_result.encode("utf-8", "ignore")
 
             return safe_message.decode("utf-8")
+        elif command_name == "respond_to_human":
+            from autogpt.commands.respond_to_human import respond_to_human
+            respond_to_human(arguments["response"])
+        elif command_name == "deduce":
+            from autogpt.commands.deduce import deduce
+            return deduce(arguments["context"], arguments["question"])
         elif command_name == "memory_add":
             memory = get_memory(CFG)
             return memory.add(arguments["string"])

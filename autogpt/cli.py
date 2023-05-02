@@ -79,7 +79,7 @@ def main(
     from autogpt.configurator import create_config
     from autogpt.logs import logger
     from autogpt.memory import get_memory
-    from autogpt.prompt import construct_prompt
+    from autogpt.prompt import construct_chatbot_prompt
     from autogpt.utils import get_current_git_branch, get_latest_bulletin
 
     if ctx.invoked_subcommand is None:
@@ -123,7 +123,7 @@ def main(
                     "parts of Auto-GPT with this version. "
                     "Please consider upgrading to Python 3.10 or higher.",
                 )
-        system_prompt = construct_prompt()
+        system_prompt = construct_chatbot_prompt()
         # print(prompt)
         # Initialize variables
         full_message_history = []

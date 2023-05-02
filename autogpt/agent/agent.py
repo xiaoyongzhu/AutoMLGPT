@@ -173,7 +173,13 @@ class Agent:
                     f"{execute_command(command_name, arguments)}"
                 )
                 if self.next_action_count > 0:
-                    self.next_action_count -= 1
+                    self.next_action_count -= 1         
+
+            # if responded to human or no action, expect an reply from human
+            if command_name in ("respond_to_human", "do_nothing"):
+                user_input = input("\n>>>>> Chat with bot:\n")
+                result = f"Human feedback: {user_input}"
+
 
             memory_to_add = (
                 f"Assistant Reply: {assistant_reply} "

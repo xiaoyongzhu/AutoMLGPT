@@ -247,10 +247,12 @@ def create_chat_completion(
                 raise
             if attempt == num_retries - 1:
                 raise
+            if CFG.debug_mode:
+                print(e)
         if CFG.debug_mode:
             print(
                 Fore.RED + "Error: ",
-                f"API Bad gateway. Waiting {backoff} seconds..." + Fore.RESET,
+                f"API Bad gateway... Waiting {backoff} seconds..." + Fore.RESET,
             )
         time.sleep(backoff)
     if response is None:
@@ -298,6 +300,6 @@ def create_embedding_with_ada(text) -> list:
         if CFG.debug_mode:
             print(
                 Fore.RED + "Error: ",
-                f"API Bad gateway. Waiting {backoff} seconds..." + Fore.RESET,
+                f"API Bad gateway.. Waiting {backoff} seconds..." + Fore.RESET,
             )
         time.sleep(backoff)
